@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-blue: #3B3BFF;
+  --color-light-blue: #60B1F0;
+  --color-warm-white: #F0E4D1;
+  --color-warm-white-2: #F7EDE0;
+  --color-dimmed: #CECECE;
+  --color-grey: #5C5C5C;
+  --color-dark-grey: #141414;
+  --color-dark-grey-2: #1A1A1A;
+  --color-purple: #9747FF;
+  --color-red-accent: #FF1F1F;
+  --color-teal: #24D4D4;
+  --color-orange: #FF9F1F;
+  --color-lime: #C8FF1F;
+  --color-navy: #1B2B40;
+
+  --font-display: "Instrument Serif", serif;
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+}
+
+/* Liquid Glass Treatment */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.liquid-glass-intense {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Problem card accent borders */
+.card-accent-blue { border-top: 2px solid #3B3BFF; }
+.card-accent-purple { border-top: 2px solid #9747FF; }
+.card-accent-teal { border-top: 2px solid #24D4D4; }
+.card-accent-orange { border-top: 2px solid #FF9F1F; }
+.card-accent-lime { border-top: 2px solid #C8FF1F; }
+
+/* Cognitive Loop Animations */
+@keyframes pulse-node {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes flow-particle {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes scroll-dot {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(40px); opacity: 0; }
+}
+
+/* Neural Network Animations */
+@keyframes signal-flow {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes contradiction-pulse {
+  0% { fill: #C8FF1F; filter: drop-shadow(0 0 0px #FF1F1F); }
+  20% { fill: #FF1F1F; filter: drop-shadow(0 0 20px #FF1F1F); }
+  100% { fill: #C8FF1F; filter: drop-shadow(0 0 0px #FF1F1F); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Font loading */
+@font-face {
+  font-family: 'Geist';
+  src: url('/node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
