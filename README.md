@@ -55,7 +55,7 @@ A high-performance, visually stunning cinematic landing page built with React, T
 ### Installation
 
 ```bash
-# Navigate to project directory
+# Navigate to app directory
 cd my-app
 
 # Install dependencies
@@ -70,6 +70,7 @@ The app will be available at `http://localhost:5173`
 ### Build for Production
 
 ```bash
+cd my-app
 npm run build
 npm run preview
 ```
