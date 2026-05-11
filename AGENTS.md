@@ -23,6 +23,20 @@ npm run preview           # Preview production build locally
 - **Master timeline orchestration** — App-level GSAP timeline choreographs load: LoadingScreen → Hero grid fade-in → Content stagger → Nav fade in
 - **Section pinning** — ArchitectureSection pins 500px during card fan; disabled on mobile
 
+## HyperFrames Video Compositions
+- **Composition file**: `my-app/public/compositions/mnemo-promo.html` — 15-second cinematic promo video
+- **Design system**: `design.md` at repo root defines brand colors, fonts, spacing; HyperFrames reads it for adherence
+- **Variables**: Composition supports custom text overrides — read `data-composition-variables` in the HTML
+- **Render** (requires HyperFrames CLI):
+  ```bash
+  cd my-app
+  npx hyperframes preview public/compositions/mnemo-promo.html
+  npx hyperframes render public/compositions/mnemo-promo.html --output mnemo.mp4
+  npx hyperframes validate public/compositions/mnemo-promo.html
+  ```
+- **Rules**: All timelines `{ paused: true }`, `window.__timelines["mnemo-promo"]` registered, scene entrances only (no exits until final scene), transitions between all scenes, no infinite repeats
+- **See**: `references/hyperframes-quick-start.md` for HyperFrames usage guidance
+
 ## Shader & Three.js Setup
 - **MemoryGridCanvas**: instanced mesh (6,500 tiles), custom vertex+fragment shaders, UnrealBloomPass; mouse NDC→world conversion; scroll position drives wave
 - **ParticleFieldCanvas**: 3,000 BufferGeometry particles, custom shader with attribute buffers, additive blending, scroll-scrubbed wave via GSAP mutating position buffer
@@ -40,6 +54,7 @@ npm run preview           # Preview production build locally
 - **Image assets**: Required 15 images live in `public/images/`; helix gallery cycles through 10 helix images, 5 architecture card images
 - **Mobile**: Pin disabled for ArchitectureSection; cards stack vertically; WebGL may be reduced on low-end devices
 - **No tests**: No Jest/Vitest configured; verify visually or add `npm run lint` checks
+- **HyperFrames**: Video compositions (`public/compositions/`) use strict timelines — always `{ paused: true }`, register `window.__timelines`, scene entrances only, transitions required, no infinite repeats; see `references/hyperframes-quick-start.md`
 
 ## Pre-Commit Checklist
 - Run `npm run lint` in `my-app/`
