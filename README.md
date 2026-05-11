@@ -167,6 +167,32 @@ The Architecture section **pins for 500px** during the card fan animation:
 - Scroll-triggered Y-axis rotation
 - No WebGL - lightweight performance
 
+## Video Assets
+
+### Mnemo Promo (HyperFrames Composition)
+
+The repo includes a **15-second cinematic explainer video** built with HyperFrames:
+
+- **File**: `my-app/public/compositions/mnemo-promo.html`
+- **Duration**: 15 seconds (3 scenes)
+- **Resolution**: 1920×1080
+- **Render**:
+  ```bash
+  cd my-app
+  npx hyperframes render public/compositions/mnemo-promo.html --output mnemo.mp4
+  ```
+- **Scene breakdown**:
+  1. **STATELESS** (0–4.5s) — Problem statement with glitch/fracture visual
+  2. **MNEMO** (4.5–9s) — Brand reveal with connecting memory nodes (triangle formation)
+  3. **PERSISTENT MEMORY ARCHITECTURE** (9–15s) — Full network visualization with 5 labeled memory systems, 3D grid background, fade to black
+
+- **Design adherence**: Uses `design.md` brand system (colors, fonts, spacing)
+- **Variable-driven**: Headlines customizable via `data-composition-variables`
+- **Sound**: Silent composition (audio track separate)
+- **Usage**: Can be embedded as `<video>` element, used for social media, or marketing collateral
+
+The composition demonstrates HyperFrames' scene-transition rules, entrance-only animations, deterministic GSAP timelines, and CSS-based visual effects without WebGL.
+
 ## Custom Shaders
 
 ### Memory Grid Vertex Shader
