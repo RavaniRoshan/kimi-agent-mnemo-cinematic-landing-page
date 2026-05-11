@@ -1,0 +1,522 @@
+<!doctype html>
+<html data-composition-variables='[{"id":"headline1","type":"string","label":"Scene 1 text","default":"STATELESS"},{"id":"headline2","type":"string","label":"Scene 2 text","default":"MNEMO"},{"id":"headline3","type":"string","label":"Scene 3 text","default":"PERSISTENT MEMORY"},{"id":"subtitle3","type":"string","label":"Scene 3 subtitle","default":"ARCHITECTURE"}]'>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mnemo Promo — HyperFrames Composition</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #050505;
+      font-family: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+    }
+
+    #composition {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      background: #050505;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    /* Shared scene container */
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+    .scene.active {
+      display: block;
+    }
+
+    .scene-content {
+      width: 100%;
+      height: 100%;
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* Typography */
+    .headline {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: 180px;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      text-align: center;
+    }
+    .headline-xl {
+      font-size: 200px;
+    }
+    .headline-multi {
+      font-size: 80px;
+      line-height: 1.1;
+      text-align: center;
+    }
+    .subtitle {
+      font-family: "Geist", sans-serif;
+      font-size: 24px;
+      color: #a0a0a0;
+      text-align: center;
+    }
+    .subtitle-mono {
+      font-family: "Geist Mono", "SF Mono", monospace;
+      font-size: 18px;
+      color: #a0a0a0;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .accent {
+      color: #3b82f6;
+    }
+
+    /* Glow helpers */
+    .glow-text {
+      text-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+    }
+    .glow-box {
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Scene 1: Glitch effect */
+    .glitch-text {
+      position: relative;
+      animation: none;
+    }
+    .glitch-text.glitching {
+      animation: glitch 0.3s infinite;
+    }
+    @keyframes glitch {
+      0% { transform: translate(0); filter: none; }
+      20% { transform: translate(-4px, 2px); filter: hue-rotate(90deg); }
+      40% { transform: translate(4px, -2px); filter: hue-rotate(180deg); }
+      60% { transform: translate(-2px, -4px); filter: hue-rotate(270deg); }
+      80% { transform: translate(2px, 4px); filter: hue-rotate(360deg); }
+      100% { transform: translate(0); filter: none; }
+    }
+    .scene1-tint {
+      position: absolute;
+      inset: 0;
+      background: rgba(244, 63, 94, 0.08);
+      pointer-events: none;
+    }
+    .fractal-shape {
+      position: absolute;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    }
+
+    /* Scene 2: Nodes and connections */
+    .nodes-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .node {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+      background: transparent;
+    }
+    .connections-svg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .connections-svg line {
+      stroke: #3b82f6;
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+    }
+
+    /* Scene 3: 3D grid and network */
+    .grid-3d {
+      position: absolute;
+      inset: 0;
+      perspective: 1000px;
+      pointer-events: none;
+    }
+    .grid-cell {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #3b82f6;
+      border-radius: 50%;
+      opacity: 0.15;
+    }
+    .network-nodes {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .network-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .network-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+      background: transparent;
+    }
+    .network-label {
+      font-family: "Geist Mono", monospace;
+      font-size: 12px;
+      color: #a0a0a0;
+    }
+    .network-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .flow-line {
+      stroke: #3b82f6;
+      stroke-width: 2;
+      fill: none;
+      opacity: 0.4;
+    }
+    .flow-particle {
+      fill: #60a5fa;
+    }
+
+    /* Transition overlays */
+    .transition-flash {
+      position: absolute;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .fade-black {
+      position: absolute;
+      inset: 0;
+      background: #050505;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="composition" data-width="1920" data-height="1080">
+    <!-- Scene 1: STATELESS – 0 to 4.5s -->
+    <div class="scene active" id="scene-1" data-composition-id="scene-1" data-start="0" data-duration="4.5" data-track-index="0">
+      <div class="scene-content" style="justify-content: center; align-items: center;">
+        <div class="scene1-tint" data-composition-id="tint-1" data-start="0" data-duration="4.5" data-track-index="1"></div>
+
+        <!-- Glitch headline -->
+        <div class="headline glitch-text" id="headline1" data-composition-id="headline1" data-start="0.3" data-duration="4.2" data-track-index="2">
+          STATELESS
+        </div>
+
+        <!-- Subtitle -->
+        <div class="subtitle" data-composition-id="subtitle1" data-start="0.8" data-duration="3.7" data-track-index="3">
+          Every conversation starts from zero
+        </div>
+
+        <!-- Fractal shapes -->
+        <div class="fractal-shape" id="shape-1" data-composition-id="shape-1" data-start="0.5" data-duration="4" data-track-index="4" style="width: 200px; height: 200px; top: 10%; left: 8%; transform: rotate(15deg);"></div>
+        <div class="fractal-shape" id="shape-2" data-composition-id="shape-2" data-start="0.7" data-duration="3.8" data-track-index="5" style="width: 150px; height: 150px; bottom: 15%; right: 10%; transform: rotate(-20deg);"></div>
+        <div class="fractal-shape" id="shape-3" data-composition-id="shape-3" data-start="0.9" data-duration="3.6" data-track-index="6" style="width: 100px; height: 100px; top: 60%; left: 85%; transform: rotate(45deg);"></div>
+        <div class="fractal-shape" id="shape-4" data-composition-id="shape-4" data-start="1.1" data-duration="3.4" data-track-index="7" style="width: 120px; height: 120px; top: 20%; right: 15%; transform: rotate(-10deg);"></div>
+      </div>
+
+      <!-- Transition flash -->
+      <div class="transition-flash" id="flash-1" data-composition-id="flash-1" data-start="4.2" data-duration="0.3" data-track-index="20"></div>
+    </div>
+
+    <!-- Scene 2: MNEMO – 4.5 to 9s -->
+    <div class="scene" id="scene-2" data-composition-id="scene-2" data-start="4.5" data-duration="4.5" data-track-index="10">
+      <div class="scene-content" style="justify-content: center; align-items: center;">
+        <!-- Bloom headline -->
+        <div class="headline headline-xl glow-text" id="headline2" data-composition-id="headline2" data-start="4.8" data-duration="4.2" data-track-index="11">
+          MNEMO
+        </div>
+
+        <!-- Memory nodes container -->
+        <div class="nodes-container" id="nodes-container" data-composition-id="nodes-container" data-start="5.5" data-duration="3.5" data-track-index="12">
+          <div class="node" id="node-1" data-composition-id="node-1" data-start="5.5" data-duration="3.5" data-track-index="13" style="top: 55%; left: 42%;"></div>
+          <div class="node" id="node-2" data-composition-id="node-2" data-start="5.6" data-duration="3.4" data-track-index="14" style="top: 45%; left: 50%;"></div>
+          <div class="node" id="node-3" data-composition-id="node-3" data-start="5.7" data-duration="3.3" data-track-index="15" style="top: 55%; left: 58%;"></div>
+        </div>
+
+        <!-- SVG connections -->
+        <svg class="connections-svg" id="connections" data-composition-id="connections" data-start="6.0" data-duration="3" data-track-index="16">
+          <line id="line-1" x1="408" y1="594" x2="480" y2="486"></line>
+          <line id="line-2" x1="480" y1="486" x2="552" y2="594"></line>
+        </svg>
+      </div>
+
+      <!-- Transition flash -->
+      <div class="transition-flash" id="flash-2" data-composition-id="flash-2" data-start="8.8" data-duration="0.2" data-track-index="21"></div>
+    </div>
+
+    <!-- Scene 3: PERSISTENT MEMORY ARCHITECTURE – 9 to 15s -->
+    <div class="scene" id="scene-3" data-composition-id="scene-3" data-start="9" data-duration="6" data-track-index="30">
+      <div class="scene-content" style="flex-direction: column; justify-content: space-between; padding-top: 120px;">
+
+        <!-- Headlines -->
+        <div style="text-align: center;">
+          <div class="headline-multi" id="headline-top" data-composition-id="headline-top" data-start="9.2" data-duration="4.8" data-track-index="31">
+            <span class="normal">PERSISTENT MEMORY</span><br>
+            <span class="accent glow-text" id="headline3-sub">ARCHITECTURE</span>
+          </div>
+          <div class="subtitle-mono" data-composition-id="subtitle3" data-start="9.8" data-duration="4.2" data-track-index="32">
+            Hierarchical. Procedural. Episodic.
+          </div>
+        </div>
+
+        <!-- 3D Background grid -->
+        <div class="grid-3d" id="grid-3d" data-composition-id="grid-3d" data-start="9.5" data-duration="5.5" data-track-index="33">
+          <!-- Grid cells injected by JS; minimal placeholder here -->
+        </div>
+
+        <!-- Network foreground -->
+        <div style="position: relative; width: 100%; flex: 1; display: flex; align-items: center;">
+          <div class="network-lines" id="network-lines" data-composition-id="network-lines" data-start="10" data-duration="5" data-track-index="34">
+            <svg width="100%" height="100%" viewBox="0 0 1920 400" preserveAspectRatio="none">
+              <line class="flow-line" x1="200" y1="200" x2="480" y2="200"></line>
+              <line class="flow-line" x1="480" y1="200" x2="700" y2="200"></line>
+              <line class="flow-line" x1="700" y1="200" x2="920" y2="200"></line>
+              <line class="flow-line" x1="920" y1="200" x2="1140" y2="200"></line>
+              <line class="flow-line" x1="1140" y1="200" x2="1360" y2="200"></line>
+            </svg>
+          </div>
+          <div class="network-nodes" id="network-nodes" data-composition-id="network-nodes" data-start="10.5" data-duration="4.5" data-track-index="35">
+            <div class="network-node">
+              <div class="network-circle"></div>
+              <span class="network-label">Working</span>
+            </div>
+            <div class="network-node">
+              <div class="network-circle"></div>
+              <span class="network-label">Episodic</span>
+            </div>
+            <div class="network-node">
+              <div class="network-circle"></div>
+              <span class="network-label">Semantic</span>
+            </div>
+            <div class="network-node">
+              <div class="network-circle"></div>
+              <span class="network-label">Procedural</span>
+            </div>
+            <div class="network-node">
+              <div class="network-circle"></div>
+              <span class="network-label">Belief</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fade to black -->
+      <div class="fade-black" id="fade-out" data-composition-id="fade-out" data-start="14.5" data-duration="0.5" data-track-index="40"></div>
+    </div>
+  </div>
+
+  <!-- GSAP via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+
+  <script>
+    // declared variables (read at top)
+    const variables = {
+      headline1: "STATELESS",
+      headline2: "MNEMO",
+      headline3: "PERSISTENT MEMORY",
+      subtitle3: "ARCHITECTURE"
+    };
+
+    // Build timeline (effects only — no async)
+    const tl = gsap.timeline({ paused: true });
+
+    // ─── Scene 1: STATELESS ─────────────────────────────────────────────────────
+    // Scene container visible at t=0
+
+    // Headline entrance: from glitchy offset+opacity, settling to state
+    tl.from("#headline1", {
+      opacity: 0,
+      y: 40,
+      duration: 1.2,
+      ease: "expo.out"
+    }, 0.3);
+
+    // Glitch class toggle
+    tl.to("#headline1", {
+      className: "glitch-text glitching",
+      duration: 0.1
+    }, 0.3);
+    tl.to("#headline1", {
+      className: "glitch-text",
+      duration: 0.1
+    }, 2.0);
+
+    // Subtitle entrance
+    tl.from("#scene-1 .subtitle", {
+      opacity: 0,
+      y: 30,
+      duration: 1,
+      ease: "power2.out"
+    }, 0.8);
+
+    // Fractal shapes entrance
+    tl.from(["#shape-1", "#shape-2", "#shape-3", "#shape-4"], {
+      opacity: 0,
+      scale: 0.6,
+      stagger: 0.15,
+      duration: 1,
+      ease: "back.out(1.7)"
+    }, 0.5);
+
+    // Transition: intensify glitch → flash → cut to scene 2
+    tl.to("#headline1", { className: "glitch-text glitching", duration: 0.1 }, 4.0);
+    tl.to("#flash-1", { opacity: 1, duration: 0.15 }, 4.2);
+    tl.add(() => {
+      document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
+      document.querySelector("#scene-2").classList.add("active");
+    }, 4.35);
+    tl.to("#flash-1", { opacity: 0, duration: 0.1 }, 4.45);
+    tl.to("#headline1", { className: "glitch-text", duration: 0.05 }, 4.45);
+
+    // ─── Scene 2: MNEMO ────────────────────────────────────────────────────────
+
+    // Headline entrance
+    tl.from("#headline2", {
+      opacity: 0,
+      scale: 0.9,
+      y: 30,
+      duration: 1.2,
+      ease: "expo.out"
+    }, 4.8);
+
+    // Nodes entrance (scattered pop-in)
+    tl.from(["#node-1", "#node-2", "#node-3"], {
+      opacity: 0,
+      scale: 0,
+      stagger: 0.1,
+      duration: 0.6,
+      ease: "back.out(1.7)"
+    }, 5.5);
+
+    // Connection lines draw (stroke-dashoffset)
+    tl.to(["#line-1", "#line-2"], {
+      strokeDashoffset: 0,
+      duration: 0.8,
+      ease: "power2.out"
+    }, 6.0);
+
+    // Transition: nodes expand → flash white → dissolve to scene 3
+    tl.to(["#node-1", "#node-2", "#node-3"], {
+      scale: 3,
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.in"
+    }, 8.6);
+    tl.to("#flash-2", { opacity: 1, duration: 0.15 }, 8.8);
+    tl.add(() => {
+      document.querySelectorAll(".scene").forEach(s => s.classList.remove("active"));
+      document.querySelector("#scene-3").classList.add("active");
+    }, 9.0);
+    tl.to("#flash-2", { opacity: 0, duration: 0.1 }, 9.1);
+
+    // ─── Scene 3: PERSISTENT MEMORY ARCHITECTURE ───────────────────────────────
+
+    // Headlines entrance
+    tl.from("#headline-top span.normal", {
+      opacity: 0,
+      y: 40,
+      duration: 1.2,
+      ease: "expo.out"
+    }, 9.2);
+    tl.from("#headline3-sub", {
+      opacity: 0,
+      y: 40,
+      duration: 1.2,
+      ease: "expo.out"
+    }, 9.4);
+    tl.from("#scene-3 .subtitle-mono", {
+      opacity: 0,
+      y: 20,
+      duration: 1,
+      ease: "power2.out"
+    }, 9.8);
+
+    // 3D grid construction (staggered cell pop-in)
+    (() => {
+      const grid = document.querySelector("#grid-3d");
+      for (let i = 0; i < 20; i++) {
+        const cell = document.createElement("div");
+        cell.className = "grid-cell";
+        cell.style.left = (200 + i * 80) + "px";
+        cell.style.top = (150 + (i % 3) * 100) + "px";
+        grid.appendChild(cell);
+      }
+    })();
+    tl.from("#grid-3d .grid-cell", {
+      opacity: 0,
+      scale: 0,
+      stagger: 0.08,
+      duration: 0.6,
+      ease: "back.out(1.7)"
+    }, 10);
+
+    // Grid subtle rotation
+    tl.to("#grid-3d", {
+      rotationY: 360,
+      duration: 30,
+      ease: "none",
+      repeat: -1
+    }, 10);
+
+    // Network nodes entrance
+    tl.from(".network-node", {
+      opacity: 0,
+      scale: 0,
+      stagger: 0.15,
+      duration: 0.7,
+      ease: "back.out(1.7)"
+    }, 10.5);
+
+    // Connection lines draw
+    tl.to(".flow-line", {
+      strokeDasharray: "0,300",
+      duration: 0.8,
+      ease: "power2.out"
+    }, 11);
+
+    // Hold → fade to black (only scene with exit)
+    tl.to("#fade-out", {
+      opacity: 1,
+      duration: 0.5,
+      ease: "power2.in"
+    }, 14.5);
+
+    // ─── Register timeline ──────────────────────────────────────────────────────
+    window.__timelines = window.__timelines || {};
+    window.__timelines["mnemo-promo"] = tl;
+  </script>
+</body>
+</html>
